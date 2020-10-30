@@ -1,0 +1,3 @@
+Pipfile.lock
+*.csv
+*.sqlite3
