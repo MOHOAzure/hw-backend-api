@@ -9,7 +9,7 @@ The jobs of the converter are:
         insert data 
 
 """
-import csv, sqlite3, configparser
+import csv, sqlite3, configparser, os
 
 def create_db():
     """
@@ -24,7 +24,13 @@ def create_db():
     # create data base
     print("\nCreating DB...")
     try:
-        db_conn = sqlite3.connect( cfg['DB']['PATH'] )
+        # create DB folder if it's not exists
+        db_folder = cfg['DB']['FOLDER']
+        if not os.path.exists( db_folder ):
+            os.makedirs( db_folder )
+        
+        # connect to DB
+        db_conn = sqlite3.connect( db_folder+cfg['DB']['NAME'] )
         c = db_conn.cursor()
         
         # create data table
@@ -46,6 +52,7 @@ def populate_db():
     cfg.read('conf.cfg')
     
     # load data from csv file
+    print("\Loading raw data...")
     with open(cfg['RAWDATA']['PATH'],'r') as fin:
         dr = csv.DictReader(fin) # comma is default delimiter, first line as key
         # select required columns of raw data
@@ -56,7 +63,8 @@ def populate_db():
     # populate database
     print("\nInserting data to DB...")
     try:
-        db_conn = sqlite3.connect( cfg['DB']['PATH'] )
+        # connect to DB
+        db_conn = sqlite3.connect( cfg['DB']['FOLDER']+cfg['DB']['NAME'] )
         c = db_conn.cursor()
         
         # insert data to db
