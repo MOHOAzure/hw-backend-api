@@ -1,1 +1,1 @@
-# Please place raw data file in this folder
+# Please place a raw data file, output.csv, in this folder
