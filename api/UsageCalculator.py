@@ -1,4 +1,4 @@
-import sqlite3, configparser
+import sqlite3, configparser, datetime
 from flask import jsonify, abort
 
 class UsageCalculator():
@@ -19,15 +19,20 @@ class UsageCalculator():
         
     def get_usage_amount(self, usageaccountid):
         """
-        Output example
+        rtype: flask.wrappers.Response
+                200: required dictionary
+                400: Invalid ID supplied. ID must be an integer and larger than 0
+                404: The unblended cost of the specified ID was not found
+        
+        Output example of required dictionary
         {
           "AWS Premium Support": {
-            "YYYY/MM/01": "1.0,",
-            "YYYY/MM/02": "1.0,"
+            "YYYY/MM/01": "1.0",
+            "YYYY/MM/02": "1.0"
           },
           "Amazon Elastic Compute Cloud": {
-            "YYYY/MM/01": "1.0,",
-            "YYYY/MM/02": "0.0,"
+            "YYYY/MM/01": "1.0",
+            "YYYY/MM/02": "0.0"
           }
         }
         
@@ -50,14 +55,11 @@ class UsageCalculator():
                         a "daily usage" dict for usage amount per day
             
             Logic:
-                If the period of days>1, then 
-                    avg_amount = average (usage amount / days)
-                    for each day in the period            
-                        if that date exists in dict, then add this usage amount to that date
-                        otherwise, create a key in dict named after the date, and then assign the usage amount 
-                If the period of days=1, then 
-                    if that date exists in dict, then add this usage amount to that date
-                    otherwise, create a key in dict named after the date, and then assign the usage amount
+            # init "product usage" dict if there is a product but dict has no corresponding product key
+            # average the usage amount in the period (days) to each date
+            # for each day
+            # # init "daily usage" dict if there is a usage of that date but dict has no corresponding date key
+            # # add average usage amount to this date
         """
         # check usageaccountid is legal
         if self.check_id_illegal(usageaccountid):
@@ -79,8 +81,33 @@ class UsageCalculator():
         
         # deal with null response
         if not results:
-            abort(404, 'The usage amount with the specified ID was not found')
+            abort(404, 'The usage amount of the specified ID was not found')
             
+        # parse to required dictionary
+        response={}    
+        for entity in enumerate(results):
+            product_name = entity[1][0]
+            usage_amount = entity[1][1]
+            start_date = entity[1][2]
+            days = entity[1][3]
+            
+            # init "product usage" dict for daily usage statistic of a product
+            if product_name not in response:
+                response[product_name]={}
+            
+            # average the usage amount in the period (days) to each date
+            avg_amount = usage_amount/days
+            
+            day_offset=0 # day offset to be added to the date
+            # add average usage amount to every day in the period
+            for _ in range(days):
+                date = (datetime.datetime.strptime(start_date, "%Y-%m-%d")+datetime.timedelta(days=day_offset)).strftime('%Y-%m-%d')
+                # init "daily usage" dict for usage amount per day
+                if date not in response[product_name]:
+                    response[product_name][date]=0
+                response[product_name][date] += avg_amount
+                day_offset += 1
+                
         db_conn.close()
-        return jsonify(results)
+        return jsonify(response)
     

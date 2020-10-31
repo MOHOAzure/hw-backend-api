@@ -54,9 +54,9 @@ class CostCalculator():
         
         # parse to required dictionary
         response={}    
-        for u in enumerate(results):
-            product_name = u[1][0]
-            cost = u[1][1]
+        for entity in enumerate(results):
+            product_name = entity[1][0]
+            cost = entity[1][1]
             response[ product_name ] = cost
             
         db_conn.close()

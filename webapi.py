@@ -43,17 +43,20 @@ def get_usage_amount(usageaccountid):
     Output example
     {
       "AWS Premium Support": {
-        "YYYY/MM/01": "1.0,",
-        "YYYY/MM/02": "1.0,"
+        "YYYY/MM/01": "1.0",
+        "YYYY/MM/02": "1.0"
       },
       "Amazon Elastic Compute Cloud": {
-        "YYYY/MM/01": "1.0,",
-        "YYYY/MM/02": "0.0,"
+        "YYYY/MM/01": "1.0",
+        "YYYY/MM/02": "0.0"
       }
     }
     """
+    # query db and cacluate costs
     c = UsageCalculator.UsageCalculator()
-    return c.get_usage_amount(usageaccountid)
+    response = c.get_usage_amount(usageaccountid)    
+    response.status_code = 200
+    return response
 
 # run server
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ def test_unblended_cost_with_legal_id():
     r = requests.get(api_base+'/unblendedcost/'+usageaccountid)
     data = r.json()
     assert r.status_code == 200
-    assert len(data) == 5 # there should be five products
+    assert len(data) == 5 # there should be five kinds products
     
 def test_unblended_cost_with_illegal_id():
     usageaccountid = "-1"
@@ -25,7 +25,7 @@ def test_usage_amount_with_legal_id():
     r = requests.get(api_base+'/usageamount/'+usageaccountid)
     data = r.json()
     assert r.status_code == 200
-    assert len(data) != 0
+    assert len(data) == 5 # there should be five kinds products
     
 def test_usage_amount_with_illegal_id():
     usageaccountid = "-1"
