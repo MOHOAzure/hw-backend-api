@@ -22,7 +22,7 @@ class UsageCalculator():
         rtype: flask.wrappers.Response
                 200: required dictionary
                 400: Invalid ID supplied. ID must be an integer and larger than 0
-                404: The unblended cost of the specified ID was not found
+                404: The usage amount of the specified ID was not found
         
         Output example of required dictionary
         {
