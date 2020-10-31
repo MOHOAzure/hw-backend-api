@@ -1,5 +1,5 @@
 import sqlite3, configparser
-from flask import abort
+from flask import abort, jsonify
 
 class CostCalculator():
     def check_id_illegal(self, id):
@@ -19,16 +19,16 @@ class CostCalculator():
         
     def get_cost(self, usageaccountid):
         """
-        rtype: list of tuple
+        rtype: flask.wrappers.Response
+                200: required dictionary
+                400: Invalid ID supplied. ID must be an integer and larger than 0
+                404: The unblended cost of the specified ID was not found
         
-        Output : example
-        [
-            (0, ('AWS Data Transfer', 0.0)),
-            (1, ('Amazon DynamoDB', 1.7450000000000003e-07)),
-            (2, ('Amazon Elastic Compute Cloud', 25.358105829299983)),
-            (3, ('Amazon Simple Storage Service', 0.000405)),
-            (4, ('AmazonCloudWatch', 0.0022699999999999994))
-        ]
+        Output example of required dictionary
+        {
+          "AWS Premium Support": "0.0",
+          "Amazon Elastic Compute Cloud": "0.0"
+        }
         """
         # check usageaccountid is legal
         if self.check_id_illegal(usageaccountid):
@@ -50,8 +50,15 @@ class CostCalculator():
         
         # deal with null response
         if not results:
-            abort(404, 'The cost with the specified ID was not found')
+            abort(404, 'The unblended cost of the specified ID was not found')
         
+        # parse to required dictionary
+        response={}    
+        for u in enumerate(results):
+            product_name = u[1][0]
+            cost = u[1][1]
+            response[ product_name ] = cost
+            
         db_conn.close()
-        return results
+        return jsonify(response)
         
