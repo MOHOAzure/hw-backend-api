@@ -26,8 +26,8 @@ class CostCalculator():
         
         Output example of required dictionary
         {
-          "AWS Premium Support": "0.0",
-          "Amazon Elastic Compute Cloud": "0.0"
+          "AWS Premium Support": 0.0,
+          "Amazon Elastic Compute Cloud": 0.0
         }
         """
         # check usageaccountid is legal
@@ -48,6 +48,8 @@ class CostCalculator():
         t = (usageaccountid,) # python suggests to provide a tuple of values as the second argument to the cursor’s execute() method
         results = c.execute( query, t ).fetchall()
         
+        db_conn.close()
+        
         # deal with null response
         if not results:
             abort(404, 'The unblended cost of the specified ID was not found')
@@ -58,7 +60,10 @@ class CostCalculator():
             product_name = entity[1][0]
             cost = entity[1][1]
             response[ product_name ] = cost
-            
-        db_conn.close()
-        return jsonify(response)
+                
+        # add 200 OK
+        response = jsonify(response)
+        response.status_code = 200
+        
+        return response
         

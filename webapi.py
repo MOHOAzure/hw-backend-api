@@ -19,16 +19,15 @@ def get_cost(usageaccountid):
     
     Output example of required dictionary
     {
-      "AWS Premium Support": "0.0",
-      "Amazon Elastic Compute Cloud": "0.0"
+      "AWS Premium Support": 0.0,
+      "Amazon Elastic Compute Cloud": 0.0
     }
     """
-    print(api_base+'/unblendedcost/'+usageaccountid)
     
     # query db and cacluate costs
     c = CostCalculator.CostCalculator()
-    response = c.get_cost(usageaccountid)    
-    response.status_code = 200
+    response = c.get_cost(usageaccountid)
+    
     return response
     
 # Get daily lineItem/UsageAmount grouping by product/productname
@@ -55,7 +54,6 @@ def get_usage_amount(usageaccountid):
     # query db and cacluate costs
     c = UsageCalculator.UsageCalculator()
     response = c.get_usage_amount(usageaccountid)    
-    response.status_code = 200
     return response
 
 # run server

@@ -27,12 +27,12 @@ class UsageCalculator():
         Output example of required dictionary
         {
           "AWS Premium Support": {
-            "YYYY/MM/01": "1.0",
-            "YYYY/MM/02": "1.0"
+            "YYYY/MM/01": 1.0,
+            "YYYY/MM/02": 1.0
           },
           "Amazon Elastic Compute Cloud": {
-            "YYYY/MM/01": "1.0",
-            "YYYY/MM/02": "0.0"
+            "YYYY/MM/01": 1.0,
+            "YYYY/MM/02": 0.0
           }
         }
         
@@ -79,6 +79,8 @@ class UsageCalculator():
         t = (usageaccountid,) # python suggests to provide a tuple of values as the second argument to the cursor’s execute() method
         results = c.execute( query, t ).fetchall()
         
+        db_conn.close()
+        
         # deal with null response
         if not results:
             abort(404, 'The usage amount of the specified ID was not found')
@@ -108,6 +110,9 @@ class UsageCalculator():
                 response[product_name][date] += avg_amount
                 day_offset += 1
                 
-        db_conn.close()
-        return jsonify(response)
+        # add 200 OK
+        response = jsonify(response)
+        response.status_code = 200
+        
+        return response
     
