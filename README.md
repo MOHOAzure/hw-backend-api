@@ -68,4 +68,4 @@ As specified in Pipfile
 - The design is presented in [this issue](https://github.com/MOHOAzure/hw-backend-api/issues/8)
 
 ## API demo
-![](https://github.com/MOHOAzure/hw-backend-api/blob/master/demo-pic/API-demo.png)
+![](https://github.com/MOHOAzure/hw-backend-api/blob/master/demo-pic/API-demo.PNG)
