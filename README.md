@@ -64,8 +64,8 @@ As specified in Pipfile
 - Details of DB design is presented in [DB design issue](https://github.com/MOHOAzure/hw-backend-api/issues/4)
 
 ## Architecture and component design
-![](https://github.com/MOHOAzure/hw-backend-api/blob/master/demopic/architecture-and-components.png)
+![](https://github.com/MOHOAzure/hw-backend-api/blob/master/demo-pic/architecture-and-components.png)
 - The design is presented in [this issue](https://github.com/MOHOAzure/hw-backend-api/issues/8)
 
 ## API demo
-![](https://github.com/MOHOAzure/hw-backend-api/blob/master/demopic/API-demo.png)
+![](https://github.com/MOHOAzure/hw-backend-api/blob/master/demo-pic/API-demo.png)
