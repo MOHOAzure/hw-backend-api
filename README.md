@@ -69,3 +69,9 @@ As specified in Pipfile
 
 ## API demo
 ![](https://github.com/MOHOAzure/hw-backend-api/blob/master/demo-pic/API-demo.PNG)
+
+## Performance
+- the response time of each API is about 30-70 ms, and most of the time is spent on DB query
+- methods to reduce the response time and improve performance
+   - assign the `lineItem/UsageAccountId` as DB index as two APIs use it to query
+   - query DB only one time in an API
